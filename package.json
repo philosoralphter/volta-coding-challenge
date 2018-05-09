@@ -1,0 +1,28 @@
+{
+  "name": "practice-questions",
+  "version": "1.0.0",
+  "description": "This is a private repo with practice coding in it.  It is often copied code from an interview, or soemthign random enough that I don't want it public.",
+  "main": "index.js",
+  "dependencies": {
+    "bluebird": "^3.5.1",
+    "chalk": "^2.4.1",
+    "cli-table-redemption": "^1.0.1",
+    "lodash": "^4.17.10",
+    "request": "^2.85.0",
+    "yargs": "^11.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/philosoralphter/practice-questions.git"
+  },
+  "bin": {
+    "volta": "./interview-questions/mist/volta/volta-cli.js"
+  },
+  "author": "Ralph Samuel<theralphsamuel@gmail.com>",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/philosoralphter/practice-questions#readme"
+}
