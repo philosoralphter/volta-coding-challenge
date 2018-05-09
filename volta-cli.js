@@ -39,7 +39,7 @@ yargs.demandCommand(1, 'Sub-Command needed!')
         .command('status', 'get the status of all stations', {}, (yargs) => {
 
 
-            apiHelpers.getStationStatus().then((stationsStatuses) => {
+            return apiHelpers.getStationStatus().then((stationsStatuses) => {
                 let stationSummary = {};
 
                 _.reduce(stationsStatuses, (summary, station) => {
@@ -230,7 +230,7 @@ function outputTabularList(items, separator) {
     columns = Math.floor(terminalWidth / (columnWidth)) - 1;
     rows = Math.ceil(items.length / columns);
 
-    console.log('Printing cols: ' + columns + ' rows: ' + rows, 'for width: ' + terminalWidth, ' and columnWidth: ', columnWidth);
+    // console.log('Printing cols: ' + columns + ' rows: ' + rows, 'for width: ' + terminalWidth, ' and columnWidth: ', columnWidth);
 
     let nextItem = 0;
     for (let row=1; row<=rows; row++) {
