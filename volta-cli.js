@@ -7,7 +7,9 @@ let yargs = require('yargs');
 
 let apiHelpers = {
     getStationStatus: function () {
+        process.stdout.write('Fetching stations...');
         return api.getStations().spread((resp, body) => {
+            process.stdout.write('Station Status Fetched.\n\n');
             return body;
         });
     }
@@ -31,12 +33,12 @@ let api = {
 //Main Command: stations
 yargs.command('stations', 'Get Information about or Operate on stations', (yargs) => {
 
-    //Sub-command: Status
     yargs
-        .demandCommand(1, '"stations" command demands a sub-command')
-        .command('status', 'get the status of all stations', {}, (argv) => {
+        .demandCommand(1, '"stations" command requires a sub-command!')
 
-            process.stdout.write('Fetching stations...');
+    //Sub-command: STATUS
+        .command('status', 'get the status of all stations', {}, (yargs) => {
+
 
             apiHelpers.getStationStatus().then((stationsStatuses) => {
                 let stationSummary = {};
@@ -46,13 +48,11 @@ yargs.command('stations', 'Get Information about or Operate on stations', (yargs
                     return summary;
                 }, stationSummary);
 
-                console.log('Station Status Fetched.\n');
-
                 console.log(chalk.bold.underline('\tStation Statuses'));
 
                 console.log(chalk.green('Active:             ', stationSummary.active));
-                console.log(chalk.red('Needs Service:      ', stationSummary['needs service']));
-                console.log(chalk.blue('Under Construction: ', stationSummary['under construction']));
+                console.log(chalk.red('Needs Service:        ', stationSummary['needs service']));
+                console.log(chalk.blue('Under Construction:  ', stationSummary['under construction']));
 
             })
         })
