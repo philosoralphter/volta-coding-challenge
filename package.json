@@ -20,7 +20,7 @@
     "url": "git+ssh://git@bitbucket.org/philosoralphter/practice-questions.git"
   },
   "bin": {
-    "volta": "./interview-questions/mist/volta/volta-cli.js"
+    "volta": "./volta-cli.js"
   },
   "author": "Ralph Samuel<theralphsamuel@gmail.com>",
   "license": "ISC",

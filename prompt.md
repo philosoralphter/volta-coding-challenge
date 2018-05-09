@@ -21,3 +21,10 @@ Aggregate data about the stations and display a high-level metric
 We don't spend much time reinventing wheels here at Volta. Depending on the meaning you would like to derive from our data, find a tool or library that helps you express it without writing an excessive amount of code or re-implementing existing technology.
 
 Conversely, if you already have a tool or library in mind: show off your skills by using something you know when to provide new insight into our data. Engineering hours are expensive so we like to find a middle-ground between correctness and efficiency.
+
+
+
+# README:
+
+To install: `npm install` dependencies in this folder, then also in this directory, run `npm link`
+To Use: in shell type: `$ volta help`
