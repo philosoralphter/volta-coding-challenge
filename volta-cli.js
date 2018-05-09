@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const Promise = require('bluebird');
+const chalk = require('chalk');
 var request = Promise.promisify(require('request'), {multiArgs: true});
 
 let yargs = require('yargs');
@@ -30,18 +31,30 @@ let api = {
 //Main Command: stations
 yargs.command('stations', 'Get Information about or Operate on stations', (yargs) => {
 
-    //Sub-commnd; Status
+    //Sub-command: Status
     yargs
         .demandCommand(1, '"stations" command demands a sub-command')
         .command('status', 'get the status of all stations', {}, (argv) => {
 
-            console.log('Fetching stations...');
+            process.stdout.write('Fetching stations...');
 
-            apiHelpers.getStationStatus().then((stationStatus) => {
-                console.log('Fetched: ', stationStatus[0])
+            apiHelpers.getStationStatus().then((stationsStatuses) => {
+                let stationSummary = {};
+
+                _.reduce(stationsStatuses, (summary, station) => {
+                    summary[station.status] ? summary[station.status]++ : summary[station.status] = 1;
+                    return summary;
+                }, stationSummary);
+
+                console.log('Station Status Fetched.\n');
+
+                console.log(chalk.bold.underline('\tStation Statuses'));
+
+                console.log(chalk.green('Active:             ', stationSummary.active));
+                console.log(chalk.red('Needs Service:      ', stationSummary['needs service']));
+                console.log(chalk.blue('Under Construction: ', stationSummary['under construction']));
+
             })
-
-
         })
 
 }).help().parse();
