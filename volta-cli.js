@@ -29,7 +29,8 @@ let api = {
 
 
 //Main Command: stations
-yargs.command('stations', 'Get Information about or Operate on stations', (yargs) => {
+yargs.demandCommand(1, 'Sub-Command needed!')
+    .command('stations', 'Get Information about or Operate on stations', (yargs) => {
 
     yargs
         .demandCommand(1, '"stations" command requires a sub-command!')
