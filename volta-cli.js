@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const _ = require('lodash');
 const Promise = require('bluebird');
 const chalk = require('chalk');
@@ -24,11 +26,6 @@ let api = {
         })
     }
 };
-
-
-
-
-
 
 
 //Main Command: stations
@@ -109,93 +106,91 @@ yargs.command('stations', 'Get Information about or Operate on stations', (yargs
                     }
                 })
             }
-        })
-
-
-        //Sub-Command LOCATIONS
-        .command('locations', 'Print Summary of Station Locations', {}, (yargs) => {
-            let totalStations = 0;
-            let totalActive = 0;
-            let totalConstruction = 0;
-            let totalService = 0;
-            let totalStates = 0;
-            let totalCities = 0;
-            let locationsPerState = 0;
-            let locationsPerCity = 0;
-            let citiesPerState = 0;
-            let locations = {
-                //state: {city: count}
-            };
-
-            let summaryTable = new Table({
-                head: ['Total', 'Total States', 'Avg Locations/State', 'Avg. Cities/State', 'Avg. Locations/City', 'active/under construction/needs service']
-            });
-
-            let detailTable = new Table({
-                head: ['State', 'Stations Count', 'Cities Count', 'Cities'],
-                colWidths: [5, 10, 10, process.stdout.columns - 30]
-            });
-
-            apiHelpers.getStationStatus().then((stationsStatuses) => {
-                _.each(stationsStatuses, (station) => {
-                    if (!station.state) return;
-
-                    let stateKey = station.state.toUpperCase();
-
-                    totalStations++;
-
-                    switch (station.status.toLowerCase()) {
-                        case 'active':
-                            totalActive++;
-                            break;
-                        case 'needs service':
-                            totalService++;
-                            break;
-                        case 'under construction':
-                            totalConstruction++;
-                            break;
-                    }
-
-                    locations[stateKey] = locations[stateKey] || {};
-                    locations[stateKey][station.city] = locations[stateKey][station.city] || 0;
-                    locations[stateKey][station.city]++;
-                });
-
-                totalStates = Object.keys(locations).length;
-                locationsPerState = totalStations / totalStates;
-                citiesPerState = _.reduce(locations, (acc, state) => {
-                    //count unique cities in all states
-                    acc = acc + Object.keys(state).length;
-                    return acc;
-                }, 0) / totalStates;
-
-                totalCities = _.reduce(locations, (acc, state) => {
-                    acc += Object.keys(state).length;
-                    return acc;
-                }, 0);
-
-                locationsPerCity = totalStations / totalCities;
-
-
-                summaryTable.push([totalStations, totalStates, locationsPerState.toFixed(), citiesPerState.toFixed(), locationsPerCity.toFixed(1), totalActive + ' / ' + totalConstruction + ' / ' + totalService]);
-
-                _.each(locations, (cities, state) => {
-                    let stationCount = _.reduce(cities, (acc, stationCount) => {
-                        acc += stationCount;
-                        return acc;
-                    }, 0);
-
-                    detailTable.push([state, stationCount, Object.keys(cities).length, Object.keys(cities).join(', ')]);
-                });
-
-
-                console.log('Summary:');
-                console.log(summaryTable.toString());
-                console.log('\n');
-                console.log(detailTable.toString());
-            });
-
         });
+
+    }).command('locations', 'Print Summary of Station Locations', {}, (yargs) => {
+
+//Command LOCATIONS
+    let totalStations = 0;
+    let totalActive = 0;
+    let totalConstruction = 0;
+    let totalService = 0;
+    let totalStates = 0;
+    let totalCities = 0;
+    let locationsPerState = 0;
+    let locationsPerCity = 0;
+    let citiesPerState = 0;
+    let locations = {
+        //state: {city: count}
+    };
+
+    let summaryTable = new Table({
+        head: ['Total', 'Total States', 'Avg Locations/State', 'Avg. Cities/State', 'Avg. Locations/City', 'active/under construction/needs service']
+    });
+
+    let detailTable = new Table({
+        head: ['State', 'Stations Count', 'Cities Count', 'Cities'],
+        colWidths: [5, 10, 10, process.stdout.columns - 30]
+    });
+
+    apiHelpers.getStationStatus().then((stationsStatuses) => {
+        _.each(stationsStatuses, (station) => {
+            if (!station.state) return;
+
+            let stateKey = station.state.toUpperCase();
+
+            totalStations++;
+
+            switch (station.status.toLowerCase()) {
+                case 'active':
+                    totalActive++;
+                    break;
+                case 'needs service':
+                    totalService++;
+                    break;
+                case 'under construction':
+                    totalConstruction++;
+                    break;
+            }
+
+            locations[stateKey] = locations[stateKey] || {};
+            locations[stateKey][station.city] = locations[stateKey][station.city] || 0;
+            locations[stateKey][station.city]++;
+        });
+
+        totalStates = Object.keys(locations).length;
+        locationsPerState = totalStations / totalStates;
+        citiesPerState = _.reduce(locations, (acc, state) => {
+            //count unique cities in all states
+            acc = acc + Object.keys(state).length;
+            return acc;
+        }, 0) / totalStates;
+
+        totalCities = _.reduce(locations, (acc, state) => {
+            acc += Object.keys(state).length;
+            return acc;
+        }, 0);
+
+        locationsPerCity = totalStations / totalCities;
+
+
+        summaryTable.push([totalStations, totalStates, locationsPerState.toFixed(), citiesPerState.toFixed(), locationsPerCity.toFixed(1), totalActive + ' / ' + totalConstruction + ' / ' + totalService]);
+
+        _.each(locations, (cities, state) => {
+            let stationCount = _.reduce(cities, (acc, stationCount) => {
+                acc += stationCount;
+                return acc;
+            }, 0);
+
+            detailTable.push([state, stationCount, Object.keys(cities).length, Object.keys(cities).join(', ')]);
+        });
+
+
+        console.log('Summary:');
+        console.log(summaryTable.toString());
+        console.log('\n');
+        console.log(detailTable.toString());
+    });
 
 }).help().parse();
 
